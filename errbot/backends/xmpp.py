@@ -108,7 +108,7 @@ class XMPPConnection(Connection):
 
     def connect(self):
         if not self.connected:
-            self.client.connect()
+            self.client.connect(use_tls=False)
             self.connected = True
         return self
 
