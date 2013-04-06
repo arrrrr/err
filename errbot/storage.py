@@ -22,10 +22,20 @@ class StoreMixin(MutableMapping):
      This class handle the basic needs of bot plugins and core like loading, unloading and creating a storage
     """
 
+    def remove_superfluous_file_extension(self, path):
+        """
+         look for .db.db file and move it to .db
+        """
+        import os
+        if os.path.isfile(path + '.db.db'):
+            logging.info("Moving file {0}.db.db to {0}.db".format(path))
+            os.rename(path + '.db.db', path + '.db')
+
     def open_storage(self, path):
         if hasattr(self, 'shelf') and self.shelf is not None:
             raise StoreAlreadyOpenError("Storage appears to be opened already")
         logging.info("Try to open db file %s" % path)
+        self.remove_superfluous_file_extension(path)
         self.shelf = shelve.DbfilenameShelf(path, protocol=2)
         logging.debug('Opened shelf of %s' % self.__class__.__name__)
 
